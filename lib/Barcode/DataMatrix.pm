@@ -39,8 +39,8 @@ Barcode::DataMatrix - Generate data for Data Matrix barcodes
 =head1 DESCRIPTION
 
 This class is used to generate data for Data Matrix barcodes. It is primarily
-useful as a data source for a barcode module that does rendering,
-such L<HTML::Barcode::DataMatrix>.  You can easily make a version that
+useful as a data source for barcode modules that do rendering,
+such as L<HTML::Barcode::DataMatrix>.  You can easily make a version that
 renders an image, PDF, or anything else.
 
 =head1 METHODS
