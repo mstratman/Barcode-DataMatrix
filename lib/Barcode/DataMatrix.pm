@@ -38,13 +38,19 @@ Barcode::DataMatrix - Generate data for Data Matrix barcodes
 
 =head1 DESCRIPTION
 
-TODO... meant to be used by rendering library.
+This class is used to generate data for Data Matrix barcodes. It is primarily
+useful as a data source for a barcode module that does rendering,
+such L<HTML::Barcode::DataMatrix>.  You can easily make a version that
+renders an image, PDF, or anything else.
 
 =head1 METHODS
 
-=head2 new
+=head2 new (%attributes)
 
-Instantiate a new Barcode::DataMatrix object.
+Instantiate a new Barcode::DataMatrix object. The C<%attributes> hash
+can take any of the other L<attributes|/ATTRIBUTES> listed below.
+
+=cut
 
 =head2 barcode ($text)
 
@@ -81,6 +87,21 @@ sub barcode {
 
     return $rv;
 }
+
+=head1 ATTRIBUTES
+
+=head2 encoding_mode
+
+The encoding mode for the data matrix. Can be one of:
+C<AUTO> (default), C<ASCII>, C<C40>, C<TEXT>, C<BASE256>, or C<NONE>.
+
+=head2 process_tilde
+
+Set to true to indicate the tilde character "~" is being used to recognize
+special characters. See this page for more information:
+L<http://www.idautomation.com/datamatrixfaq.html>
+
+=cut
 
 =head1 AUTHOR
 
