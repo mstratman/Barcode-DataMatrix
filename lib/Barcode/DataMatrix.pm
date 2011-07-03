@@ -8,6 +8,7 @@ our $VERSION = '0.01';
 has 'encoding_mode' => (
     is       => 'ro',
     isa      => enum(qw[ ASCII C40 TEXT BASE256 NONE AUTO ]),
+    isa      => enum('BCDM_EncodingMode', qw[ ASCII C40 TEXT BASE256 NONE AUTO ]),
     required => 1,
     default  => 'AUTO',
     documentation => 'The encoding mode for the data matrix. Can be one of: ASCII C40 TEXT BASE256 NONE AUTO',
