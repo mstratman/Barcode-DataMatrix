@@ -1,103 +1,109 @@
 package Barcode::DataMatrix;
-
-use 5.006;
-use strict;
-use warnings;
-
-=head1 NAME
-
-Barcode::DataMatrix - The great new Barcode::DataMatrix!
-
-=head1 VERSION
-
-Version 0.01
-
-=cut
+use Any::Moose;
+use Any::Moose '::Util::TypeConstraints';
+use Barcode::DataMatrix::Engine ();
 
 our $VERSION = '0.01';
 
+has 'encoding_mode' => (
+    is       => 'ro',
+    isa      => enum(qw[ ASCII C40 TEXT BASE256 NONE AUTO ]),
+    required => 1,
+    default  => 'AUTO',
+    documentation => 'The encoding mode for the data matrix. Can be one of: ASCII C40 TEXT BASE256 NONE AUTO',
+);
+has 'process_tilde' => (
+    is       => 'ro',
+    isa      => 'Bool',
+    required => 1,
+    default  => 0,
+    documentation => 'Set to true to indicate the tilde character "~" is being used to recognize special characters.',
+);
+
+=head1 NAME
+
+Barcode::DataMatrix - Generate data for Data Matrix barcodes
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
-
     use Barcode::DataMatrix;
-
-    my $foo = Barcode::DataMatrix->new();
-    ...
-
-=head1 EXPORT
-
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
-
-=head1 SUBROUTINES/METHODS
-
-=head2 function1
+    my $data = Barcode::DataMatrix->new->barcode('MONKEY');
+    for my $row (@$data) {
+        print for map { $_ ? "#" : ' ' } @$row;
+        print "\n";
+    }
 
 =cut
 
-sub function1 {
-}
 
-=head2 function2
+=head1 METHODS
+
+=head2 new
+
+Instantiate a new Barcode::DataMatrix object.
+
+=head2 barcode ($text)
+
+Generate barcode data representing the C<$text> string.  This returns
+an array ref of rows in the data matrix, each containing array refs of 
+cells within that row. The cells are true and false values
+that represent filled or empty squares.
+
+This can throw an exception if it's unable to generate the barcode data.
 
 =cut
 
-sub function2 {
+sub barcode {
+    my ($self, $text) = @_;
+
+    my $engine = Barcode::DataMatrix::Engine->new(
+        $text,
+        $self->encoding_mode,
+        undef, # size
+        $self->process_tilde,
+    );
+
+    my $rows = $engine->{rows};
+    my $cols = $engine->{cols};
+    my $bitmap = $engine->{bitmap};
+    my $rv = [];
+    for my $r (0 .. $rows - 1) {
+        my $row = [];
+        for my $c (0 .. $cols - 1) {
+            push @$row, ($bitmap->[$c]->[$r] ? 1 : 0);
+        }
+        push @$rv, $row;
+    }
+
+    return $rv;
 }
 
 =head1 AUTHOR
 
-Mark A. Stratman, C<< <stratman at gmail.com> >>
+Mons Anderson C<< <inthrax@gmail.com> >> (GD::Barcode::DataMatrix at L<http://code.google.com/p/perl-ex/>, from which this distribution originates)
 
-=head1 BUGS
+Mark A. Stratman, C<< <stratman@gmail.com> >>
 
-Please report any bugs or feature requests to C<bug-barcode-datamatrix at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Barcode-DataMatrix>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+=head1 SOURCE REPOSITORY
 
+L<http://github.com/mstratman/Barcode-DataMatrix>
 
-
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc Barcode::DataMatrix
-
-
-You can also look for information at:
+=head1 SEE ALSO
 
 =over 4
 
-=item * RT: CPAN's request tracker (report bugs here)
+=item L<HTML::Barcode::DataMatrix>
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Barcode-DataMatrix>
+=item L<http://grandzebu.net/index.php?page=/informatique/codbar-en/datamatrix.htm
+>
 
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Barcode-DataMatrix>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Barcode-DataMatrix>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Barcode-DataMatrix/>
+=item L<http://www.idautomation.com/datamatrixfaq.html>
 
 =back
 
-
-=head1 ACKNOWLEDGEMENTS
-
-
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Mark A. Stratman.
+Copyright 2011 the AUTHORs listed above.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
@@ -108,4 +114,5 @@ See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
+no Any::Moose;
 1; # End of Barcode::DataMatrix
