@@ -132,9 +132,9 @@ sub ProcessTilde {
 				}
 				else{
 					$d =
-						chr( int+ ( $d - 16383 ) / 64516 + 192 ).
+						chr( int( ( $d - 16383 ) / 64516 + 192 ) ).
 						chr( int( ( $d - 16383 ) / 254 ) % 254 + 1 ).
-						chr( int+ ( $d - 16383 ) % 254 + 1 );
+						chr( int( ( $d - 16383 ) % 254 + 1 ) );
 				}
 				$as->[$-[0]] = $d;
 				warn "PT affect as[$-[0]] = ".join('+', map ord, split //, $d) if $DEBUG{TRACE};
@@ -151,30 +151,30 @@ sub CalcReed { # (int ai[], int i, int j) : void
 	my $rv = Barcode::DataMatrix::Reed::encode($ai,$err);
 	@$ai = @$rv;
 	return $ai;
-	sub mult($$) { # (int i, int j) : int
-		my ($i,$j) = @_;
-		my $k = 0;
-		return 0 unless 1 * $i * $j;
-		$k = $GFL[$i] + $GFL[$j];
-		$k -= $N if $k >= $N;
-		return $GFI[$k];
-	}
-	sub short($) { $_[0] & 0xFF; }
-		
-	my ($ai,$j) = @_;
-	my $i = @$ai;
-	warn "CalcReed(ai {".join(" ",grep{+defined}@$ai)."},$i,$j)\n" if $DEBUG{CALC};
-	my $p = exists $POLY{$j} ? $POLY{$j} : $POLY{68};
-	warn "CalcReed: poly {".join(" ",@$p)."}\n" if $DEBUG{CALC};
-    @$ai[ $i .. $i + $j - 1 ] = (0) x $j;
-    for my $l(0 .. $i - 1) {
-        my $word0 = short($ai->[$i] ^ $ai->[$l]);
-        for my $i1 (0 .. $j - 1) {
-            $ai->[$i + $i1] = short( $ai->[$i + $i1 + 1] ^ mult($word0, $p->[$i1]) );
-        }
-        $ai->[$i+$j-1] = mult($word0, $p->[$j - 1]);
-    }
-    return $ai;
+	#sub mult($$) { # (int i, int j) : int
+#		my ($i,$j) = @_;
+#		my $k = 0;
+#		return 0 unless 1 * $i * $j;
+#		$k = $GFL[$i] + $GFL[$j];
+#		$k -= $N if $k >= $N;
+#		return $GFI[$k];
+#	}
+#	sub short($) { $_[0] & 0xFF; }
+#		
+#	my ($ai,$j) = @_;
+#	my $i = @$ai;
+#	warn "CalcReed(ai {".join(" ",grep{+defined}@$ai)."},$i,$j)\n" if $DEBUG{CALC};
+#	my $p = exists $POLY{$j} ? $POLY{$j} : $POLY{68};
+#	warn "CalcReed: poly {".join(" ",@$p)."}\n" if $DEBUG{CALC};
+#    @$ai[ $i .. $i + $j - 1 ] = (0) x $j;
+#    for my $l(0 .. $i - 1) {
+#        my $word0 = short($ai->[$i] ^ $ai->[$l]);
+#        for my $i1 (0 .. $j - 1) {
+#            $ai->[$i + $i1] = short( $ai->[$i + $i1 + 1] ^ mult($word0, $p->[$i1]) );
+#        }
+#        $ai->[$i+$j-1] = mult($word0, $p->[$j - 1]);
+#    }
+#    return $ai;
 }
 
 sub A253($$) # C8 (int i, int j) : int 

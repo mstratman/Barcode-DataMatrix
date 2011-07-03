@@ -35,6 +35,9 @@ Barcode::DataMatrix - Generate data for Data Matrix barcodes
 
 =cut
 
+=head1 DESCRIPTION
+
+TODO... meant to be used by rendering library.
 
 =head1 METHODS
 
