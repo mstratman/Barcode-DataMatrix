@@ -3,7 +3,7 @@ use Any::Moose;
 use Any::Moose '::Util::TypeConstraints';
 use Barcode::DataMatrix::Engine ();
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 has 'encoding_mode' => (
     is       => 'ro',

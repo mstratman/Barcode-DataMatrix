@@ -1,8 +1,11 @@
 Revision history for Barcode-DataMatrix
 
+0.03    Mon Jul  4 01:41:08 CDT 2011
+        - Move author tests to xt to avoid failed tests.
+
 0.02    Sun Jul  3 02:28:24 CDT 2011
-        Fixed SEE ALSO link
+        - Fixed SEE ALSO link
 
 0.01    Sun Jul  3
-        First version, released on an unsuspecting world.
+        - First version, released on an unsuspecting world.
 
