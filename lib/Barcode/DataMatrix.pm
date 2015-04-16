@@ -3,12 +3,12 @@ use Any::Moose;
 use Any::Moose '::Util::TypeConstraints';
 use Barcode::DataMatrix::Engine ();
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 has 'encoding_mode' => (
     is       => 'ro',
-    isa      => enum(qw[ ASCII C40 TEXT BASE256 NONE AUTO ]),
-    isa      => enum('BCDM_EncodingMode', qw[ ASCII C40 TEXT BASE256 NONE AUTO ]),
+    isa      => enum([qw[ ASCII C40 TEXT BASE256 NONE AUTO ]]),
+    isa      => enum('BCDM_EncodingMode', [qw[ ASCII C40 TEXT BASE256 NONE AUTO ]]),
     required => 1,
     default  => 'AUTO',
     documentation => 'The encoding mode for the data matrix. Can be one of: ASCII C40 TEXT BASE256 NONE AUTO',

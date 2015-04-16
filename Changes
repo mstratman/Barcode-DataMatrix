@@ -1,4 +1,8 @@
 Revision history for Barcode-DataMatrix
+0.05    Thu Apr 16 09:56:07 CDT 2015
+        - Updated the various enums to use an array reference rather
+          than an array to avoid deprecation warnings when using Moose 2.1200
+          or newer
 
 0.04    Thu Jun 21 09:01:05 CDT 2012
         - Use Module::Install::Repository because metacpan doesn't
