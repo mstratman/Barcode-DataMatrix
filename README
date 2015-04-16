@@ -1,55 +1,65 @@
-Barcode-DataMatrix
+NAME
+    Barcode::DataMatrix - Generate data for Data Matrix barcodes
 
-The README is used to introduce the module and provide instructions on
-how to install the module, any machine dependencies it may have (for
-example C compilers and installed libraries) and any other information
-that should be provided before the module is installed.
+SYNOPSIS
+        use Barcode::DataMatrix;
+        my $data = Barcode::DataMatrix->new->barcode('MONKEY');
+        for my $row (@$data) {
+            print for map { $_ ? "#" : ' ' } @$row;
+            print "\n";
+        }
 
-A README file is required for CPAN modules since CPAN extracts the README
-file from a module distribution so that people browsing the archive
-can use it to get an idea of the module's uses. It is usually a good idea
-to provide version information here so that people can decide whether
-fixes for the module are worth downloading.
+DESCRIPTION
+    This class is used to generate data for Data Matrix barcodes. It is
+    primarily useful as a data source for barcode modules that do rendering,
+    such as HTML::Barcode::DataMatrix. You can easily make a version that
+    renders an image, PDF, or anything else.
 
+METHODS
+  new (%attributes)
+    Instantiate a new Barcode::DataMatrix object. The `%attributes' hash can
+    take any of the other attributes listed below.
 
-INSTALLATION
+  barcode ($text)
+    Generate barcode data representing the `$text' string. This returns an
+    array ref of rows in the data matrix, each containing array refs of
+    cells within that row. The cells are true and false values that
+    represent filled or empty squares.
 
-To install this module, run the following commands:
+    This can throw an exception if it's unable to generate the barcode data.
 
-	perl Makefile.PL
-	make
-	make test
-	make install
+ATTRIBUTES
+  encoding_mode
+    The encoding mode for the data matrix. Can be one of: `AUTO' (default),
+    `ASCII', `C40', `TEXT', `BASE256', or `NONE'.
 
-SUPPORT AND DOCUMENTATION
+  process_tilde
+    Set to true to indicate the tilde character "~" is being used to
+    recognize special characters. See this page for more information:
+    http://www.idautomation.com/datamatrixfaq.html
 
-After installing, you can find documentation for this module with the
-perldoc command.
+AUTHOR
+    Mons Anderson `<inthrax@gmail.com>' (GD::Barcode::DataMatrix at
+    http://code.google.com/p/perl-ex/, from which this distribution
+    originates)
 
-    perldoc Barcode::DataMatrix
+    Mark A. Stratman, `<stratman@gmail.com>'
 
-You can also look for information at:
+SOURCE REPOSITORY
+    http://github.com/mstratman/Barcode-DataMatrix
 
-    RT, CPAN's request tracker (report bugs here)
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Barcode-DataMatrix
-
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/Barcode-DataMatrix
-
-    CPAN Ratings
-        http://cpanratings.perl.org/d/Barcode-DataMatrix
-
-    Search CPAN
-        http://search.cpan.org/dist/Barcode-DataMatrix/
-
+SEE ALSO
+    HTML::Barcode::DataMatrix
+    http://grandzebu.net/index.php?page=/informatique/codbar-en/datamatrix.h
+    tm
+    http://www.idautomation.com/datamatrixfaq.html
 
 LICENSE AND COPYRIGHT
+    Copyright 2011 the AUTHORs listed above.
 
-Copyright (C) 2011 Mark A. Stratman
+    This program is free software; you can redistribute it and/or modify it
+    under the terms of either: the GNU General Public License as published
+    by the Free Software Foundation; or the Artistic License.
 
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See http://dev.perl.org/licenses/ for more information.
+    See http://dev.perl.org/licenses/ for more information.
 
