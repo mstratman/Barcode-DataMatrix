@@ -1,5 +1,6 @@
 ^Barcode-DataMatrix-
-MYMETA\.yml
+#!install_default
+MYMETA\.*
 ^\.gitignore
 \.swp$
 pod2h*
