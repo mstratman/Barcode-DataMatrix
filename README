@@ -2,6 +2,12 @@ NAME
     Barcode::DataMatrix - Generate data for Data Matrix barcodes
 
 SYNOPSIS
+    Install this module from CPAN, for example with the cpan command:
+
+        cpan Barcode::DataMatrix
+
+    Then use as:
+
         use Barcode::DataMatrix;
         my $data = Barcode::DataMatrix->new->barcode('MONKEY');
         for my $row (@$data) {
@@ -48,10 +54,19 @@ AUTHOR
 SOURCE REPOSITORY
     http://github.com/mstratman/Barcode-DataMatrix
 
+    This distribution requires that the Module::Install::Repository module
+    first be installed, before the standard procedure for building the
+    module from source:
+
+        cpan Module::Install::Repository
+        perl Makefile.PL
+        make
+        make test
+        ...
+
 SEE ALSO
     HTML::Barcode::DataMatrix
-    http://grandzebu.net/index.php?page=/informatique/codbar-en/datamatrix.h
-    tm
+    http://grandzebu.net/informatique/codbar-en/datamatrix.htm
     http://www.idautomation.com/datamatrixfaq.html
 
 LICENSE AND COPYRIGHT
