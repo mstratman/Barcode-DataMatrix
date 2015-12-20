@@ -38,7 +38,7 @@ ATTRIBUTES
     recognize special characters. See this page for more information:
     http://www.idautomation.com/datamatrixfaq.html
 
-AUTHOR
+AUTHORS
     Mons Anderson `<inthrax@gmail.com>' (GD::Barcode::DataMatrix at
     http://code.google.com/p/perl-ex/, from which this distribution
     originates)
@@ -55,7 +55,7 @@ SEE ALSO
     http://www.idautomation.com/datamatrixfaq.html
 
 LICENSE AND COPYRIGHT
-    Copyright 2011 the AUTHORs listed above.
+    Copyright 2015 the AUTHORS listed above.
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of either: the GNU General Public License as published
