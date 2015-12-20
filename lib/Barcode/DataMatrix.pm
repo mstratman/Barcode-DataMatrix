@@ -119,7 +119,7 @@ L<http://github.com/mstratman/Barcode-DataMatrix>
 
 =item L<HTML::Barcode::DataMatrix>
 
-=item L<http://grandzebu.net/index.php?page=/informatique/codbar-en/datamatrix.htm>
+=item L<http://grandzebu.net/informatique/codbar-en/datamatrix.htm>
 
 =item L<http://www.idautomation.com/datamatrixfaq.html>
 
