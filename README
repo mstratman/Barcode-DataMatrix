@@ -40,7 +40,7 @@ ATTRIBUTES
 
 AUTHOR
     Mons Anderson `<inthrax@gmail.com>' (GD::Barcode::DataMatrix at
-    http://code.google.com/p/perl-ex/, from which this distribution
+    https://github.com/Mons/perl-ex/, from which this distribution
     originates)
 
     Mark A. Stratman, `<stratman@gmail.com>'
