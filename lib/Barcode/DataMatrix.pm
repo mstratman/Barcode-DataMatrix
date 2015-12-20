@@ -105,7 +105,7 @@ L<http://www.idautomation.com/datamatrixfaq.html>
 
 =head1 AUTHOR
 
-Mons Anderson C<< <inthrax@gmail.com> >> (GD::Barcode::DataMatrix at L<http://code.google.com/p/perl-ex/>, from which this distribution originates)
+Mons Anderson C<< <inthrax@gmail.com> >> (GD::Barcode::DataMatrix at L<https://github.com/Mons/perl-ex/>, from which this distribution originates)
 
 Mark A. Stratman, C<< <stratman@gmail.com> >>
 
@@ -119,7 +119,7 @@ L<http://github.com/mstratman/Barcode-DataMatrix>
 
 =item L<HTML::Barcode::DataMatrix>
 
-=item L<http://grandzebu.net/index.php?page=/informatique/codbar-en/datamatrix.htm>
+=item L<http://grandzebu.net/informatique/codbar-en/datamatrix.htm>
 
 =item L<http://www.idautomation.com/datamatrixfaq.html>
 

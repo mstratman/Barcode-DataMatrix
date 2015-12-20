@@ -40,7 +40,7 @@ ATTRIBUTES
 
 AUTHOR
     Mons Anderson `<inthrax@gmail.com>' (GD::Barcode::DataMatrix at
-    http://code.google.com/p/perl-ex/, from which this distribution
+    https://github.com/Mons/perl-ex/, from which this distribution
     originates)
 
     Mark A. Stratman, `<stratman@gmail.com>'
@@ -50,8 +50,7 @@ SOURCE REPOSITORY
 
 SEE ALSO
     HTML::Barcode::DataMatrix
-    http://grandzebu.net/index.php?page=/informatique/codbar-en/datamatrix.h
-    tm
+    http://grandzebu.net/informatique/codbar-en/datamatrix.htm
     http://www.idautomation.com/datamatrixfaq.html
 
 LICENSE AND COPYRIGHT
