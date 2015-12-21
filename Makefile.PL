@@ -5,7 +5,7 @@ all_from 'lib/Barcode/DataMatrix.pm';
 author   q{Mark A. Stratman <stratman@gmail.com>};
 license  'perl';
 
-requires 'Any::Moose' => '0.15';
+requires 'Moose' => '2.1200';
 
 tests 't/*.t';
 author_tests 'xt';

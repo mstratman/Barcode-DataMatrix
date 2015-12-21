@@ -1,6 +1,6 @@
 package Barcode::DataMatrix;
-use Any::Moose;
-use Any::Moose '::Util::TypeConstraints';
+use Moose;
+use Moose::Util::TypeConstraints;
 use Barcode::DataMatrix::Engine ();
 
 our $VERSION = '0.05';
@@ -138,5 +138,4 @@ See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
-no Any::Moose;
 1; # End of Barcode::DataMatrix
