@@ -1,6 +1,8 @@
 package Barcode::DataMatrix;
-use Any::Moose;
-use Any::Moose '::Util::TypeConstraints';
+use Moo;
+use Type::Tiny;
+use Types::Standard qw(:all);
+use Type::Utils qw(enum);
 use Barcode::DataMatrix::Engine ();
 
 our $VERSION = '0.05';
@@ -8,15 +10,15 @@ our $VERSION = '0.05';
 has 'encoding_mode' => (
     is       => 'ro',
     isa      => enum([qw[ ASCII C40 TEXT BASE256 NONE AUTO ]]),
-    isa      => enum('BCDM_EncodingMode', [qw[ ASCII C40 TEXT BASE256 NONE AUTO ]]),
+    isa      => enum(BCDM_EncodingMode => [qw[ ASCII C40 TEXT BASE256 NONE AUTO ]]),
     required => 1,
     default  => 'AUTO',
     documentation => 'The encoding mode for the data matrix. Can be one of: ASCII C40 TEXT BASE256 NONE AUTO',
 );
 has 'process_tilde' => (
     is       => 'ro',
-    isa      => 'Bool',
-    required => 1,
+    isa      => Bool,
+    required => 0,
     default  => 0,
     documentation => 'Set to true to indicate the tilde character "~" is being used to recognize special characters.',
 );
@@ -138,5 +140,4 @@ See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
-no Any::Moose;
 1; # End of Barcode::DataMatrix
