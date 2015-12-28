@@ -119,27 +119,27 @@ sub ProcessTilde {
 		s{^~3}{ $as->[0] = ''; "\352" }e;
 		s{^~5}{ $as->[0] = ''; "\354" }e;
 		s{^~6}{ $as->[0] = ''; "\355" }e;
-			s{~7(.{6})}{do{
-				my $d = int $1;
-				#warn "There is $d got from $1\n";
-				if ($d < 127) {
-					$d = chr($d+1);
-				}
-				elsif($d < 16383) {
-					$d =
-						chr( ( $d - 127 ) / 254 + 128 ).
-						chr( ( $d - 127 ) % 254 + 1 );
-				}
-				else{
-					$d =
-						chr( int( ( $d - 16383 ) / 64516 + 192 ) ).
-						chr( int( ( $d - 16383 ) / 254 ) % 254 + 1 ).
-						chr( int( ( $d - 16383 ) % 254 + 1 ) );
-				}
-				$as->[$-[0]] = $d;
-				warn "PT affect as[$-[0]] = ".join('+', map ord, split //, $d) if $DEBUG{TRACE};
-				"\361"
-			}}ge;
+		s{~7(.{6})}{do{
+			my $d = int $1;
+			#warn "There is $d got from $1\n";
+			if ($d < 127) {
+				$d = chr($d+1);
+			}
+			elsif($d < 16383) {
+				$d =
+					chr( ( $d - 127 ) / 254 + 128 ).
+					chr( ( $d - 127 ) % 254 + 1 );
+			}
+			else{
+				$d =
+					chr( int( ( $d - 16383 ) / 64516 + 192 ) ).
+					chr( int( ( $d - 16383 ) / 254 ) % 254 + 1 ).
+					chr( int( ( $d - 16383 ) % 254 + 1 ) );
+			}
+			$as->[$-[0]] = $d;
+			warn "PT affect as[$-[0]] = ".join('+', map ord, split //, $d) if $DEBUG{TRACE};
+			"\361"
+		}}ge;
 		s{~(.)}{$1 eq '~' ? '~' : $1}ge;
 		warn "[C9] ProcessTilde($self->{code}) => ".Dumper($_) if $DEBUG{TRACE};
 		return $self->{code} = $_;
