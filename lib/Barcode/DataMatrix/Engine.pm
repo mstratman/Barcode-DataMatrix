@@ -23,12 +23,12 @@ our (@GFI,@GFL,%POLY,@FORMATS,@C1);
 *FORMATS = \@Barcode::DataMatrix::Constants::FORMATS;
 *C1      = \@Barcode::DataMatrix::Constants::C1;
 
-sub E_ASCII  () { 0 }
-sub E_C40    () { 1 }
-sub E_TEXT   () { 2 }
-sub E_BASE256() { 3 }
-sub E_NONE   () { 4 }
-sub E_AUTO   () { 5 }
+sub E_ASCII   { 0 }
+sub E_C40     { 1 }
+sub E_TEXT    { 2 }
+sub E_BASE256 { 3 }
+sub E_NONE    { 4 }
+sub E_AUTO    { 5 }
 
 our $N = 255;
 
@@ -36,11 +36,11 @@ sub Types {
 	return qw( ASCII C40 TEXT BASE256 NONE AUTO );
 }
 
-sub stringToType($) {
+sub stringToType {
 	my $m = 'E_'.shift;
 	return eval { __PACKAGE__->$m(); };
 }
-sub typeToString($) {
+sub typeToString {
 	my $i = shift;
 	for (Types) {
 		return $_ if stringToType($_) == $i and defined $i;
@@ -50,7 +50,7 @@ sub typeToString($) {
 
 our @encName = map { typeToString $_ } 0..5;
 
-sub stringToFormat($) {
+sub stringToFormat {
 	my $sz = shift;
 	return unless $sz;
 	my ($w,$h) = map { +int } split /\s*x\s*/,$sz,2;
@@ -177,7 +177,7 @@ sub CalcReed { # (int ai[], int i, int j) : void
 #    return $ai;
 }
 
-sub A253($$) # C8 (int i, int j) : int 
+sub A253 # C8 (int i, int j) : int 
 {
 	my ($i,$j) = @_;
     my $l = $i + (149 * $j) % 253 + 1;
@@ -614,7 +614,7 @@ sub EncodeC40TEXT { # C6 #(int i, int ai[], int ai1[], int ai2[], boolean flag, 
 }
 
 
-sub state255($$) # (int V, int P) : int
+sub state255 # (int V, int P) : int
 {
 	#The 255-state algorithm.
 	#Let P the number of data CWs from the beginning of datas,

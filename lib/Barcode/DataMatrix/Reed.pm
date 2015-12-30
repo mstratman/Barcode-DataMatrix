@@ -11,12 +11,13 @@ our (@GFI,@GFL,%POLY,$DEBUG);
 our $N = 255;
 sub DEBUG () { 0 }
 
-sub mult($$) {
-	return 0 unless $_[0] * $_[1];
-	return $GFI[($GFL[$_[0]] + $GFL[$_[1]]) % $N];
+sub mult {
+    my ($x, $y) = @_;
+	return 0 unless $x * $y;
+	return $GFI[($GFL[$x] + $GFL[$y]) % $N];
 }
 
-sub encode($$) {
+sub encode {
 	my ($ai,$j) = @_;
 	my $i = @$ai;
 	for (0..$#$ai) {
