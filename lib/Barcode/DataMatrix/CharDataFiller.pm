@@ -1,6 +1,22 @@
 package Barcode::DataMatrix::CharDataFiller;
 
+=head1 Barcode::DataMatrix::CharDataFiller
+
+Handle filling character data within the data matrix array.
+
+The documentation for the methods in this class has been adapted from the
+comments in
+L<https://github.com/itext/itextpdf/blob/master/itext/src/main/java/com/itextpdf/text/pdf/BarcodeDatamatrix.java>.
+
+=cut
+
 use strict;
+
+=head2 new
+
+Construct a C<Barcode::DataMatrix::CharDataFiller> object.
+
+=cut
 
 sub new {
 	my $self = bless {}, shift;
@@ -8,6 +24,12 @@ sub new {
 	$self->fill();
 	return $self;
 }
+
+=head2 module (i, j, k, l)
+
+Places "chr+bit" with the appropriate wrapping within the array.
+
+=cut
 
 sub module {
 	my ($self,$i,$j,$k,$l) = @_;
@@ -23,6 +45,12 @@ sub module {
     return;
 }
 
+=head2 utah (i, j, k)
+
+Places the 8 bits of a utah-shaped symbol character.
+
+=cut
+
 sub utah {
 	my ($self,$i,$j,$k) = @_;
     $self->module($i - 2, $j - 2, $k, 1);
@@ -35,6 +63,12 @@ sub utah {
     $self->module($i, $j, $k, 8);
     return;
 }
+
+=head2 corner1 (i)
+
+Places 8 bits of the first of the four special corner cases.
+
+=cut
 
 sub corner1 {
 	my ($self,$i) = @_;
@@ -50,6 +84,12 @@ sub corner1 {
     return;
 }
 
+=head2 corner2 (i)
+
+Places 8 bits of the second of the four special corner cases.
+
+=cut
+
 sub corner2($) { #(int i)
 	my ($self,$i) = @_;
 	my ($ncol,$nrow) = @$self{qw( ncol nrow )};
@@ -63,6 +103,12 @@ sub corner2($) { #(int i)
     $self->module(1, $ncol - 1, $i, 8);
     return;
 }
+
+=head2 corner3 (i)
+
+Places 8 bits of the third of the four special corner cases.
+
+=cut
 
 sub corner3($) { #(int i)
 	my ($self,$i) = @_;
@@ -78,6 +124,12 @@ sub corner3($) { #(int i)
     return;
 }
 
+=head2 corner4 (i)
+
+Places 8 bits of the fourth of the four special corner cases.
+
+=cut
+
 sub corner4($) { #(int i)
 	my ($self,$i) = @_;
 	my ($ncol,$nrow) = @$self{qw( ncol nrow )};
@@ -91,6 +143,12 @@ sub corner4($) { #(int i)
     $self->module(1, $ncol - 1, $i, 8);
     return;
 }
+
+=head2 fill
+
+Fills an nrow x ncol array with appropriate values.
+
+=cut
 
 sub fill { # (int ncol; int nrow; int array;) : void
 	my $self = shift;

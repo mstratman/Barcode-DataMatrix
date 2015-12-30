@@ -1,11 +1,24 @@
 package Barcode::DataMatrix::Engine;
 
+=head1 Barcode::DataMatrix::Engine
+
+The engine which generates the data matrix bitmap.
+
+=cut
+
 use strict;
 no warnings qw(uninitialized);
 use Barcode::DataMatrix::Reed;
 use Barcode::DataMatrix::Constants ();
 use Barcode::DataMatrix::CharDataFiller ();
 use Data::Dumper;$Data::Dumper::Useqq = 1;
+
+=head2 DEBUG
+
+Turn on/off general debugging information.
+
+=cut
+
 use constant DEBUG => 0;
 
 our %DEBUG = (
@@ -23,23 +36,83 @@ our (@GFI,@GFL,%POLY,@FORMATS,@C1);
 *FORMATS = \@Barcode::DataMatrix::Constants::FORMATS;
 *C1      = \@Barcode::DataMatrix::Constants::C1;
 
+=head2 E_ASCII
+
+Represent the ASCII encoding type.
+
+=cut
+
 sub E_ASCII  () { 0 }
+
+=head2 E_C40
+
+Represent the C40 encoding type.  (upper case alphanumeric)
+
+=cut
+
 sub E_C40    () { 1 }
+
+=head2 E_TEXT
+
+Represent the TEXT encoding type.  (lower case alphanumeric)
+
+=cut
+
 sub E_TEXT   () { 2 }
+
+=head2 E_BASE256
+
+Represent the BASE256 encoding type.
+
+=cut
+
 sub E_BASE256() { 3 }
+
+=head2 E_NONE
+
+Represent the when there is no encoding type.
+
+=cut
+
 sub E_NONE   () { 4 }
+
+=head2 E_AUTO
+
+Represent the when the encoding type is automatically set.
+
+=cut
+
 sub E_AUTO   () { 5 }
 
 our $N = 255;
+
+=head2 Types
+
+Return a list of encoding types.
+
+=cut
 
 sub Types {
 	return qw( ASCII C40 TEXT BASE256 NONE AUTO );
 }
 
+=head2 stringToType (type_name)
+
+Return the integer representing the type from the type name.
+
+=cut
+
 sub stringToType($) {
 	my $m = 'E_'.shift;
 	return eval { __PACKAGE__->$m(); };
 }
+
+=head2 typeToString (type_integer)
+
+Return the type name from the integer representing the type.
+
+=cut
+
 sub typeToString($) {
 	my $i = shift;
 	for (Types) {
@@ -49,6 +122,12 @@ sub typeToString($) {
 }
 
 our @encName = map { typeToString $_ } 0..5;
+
+=head2 stringToFormat (format_string)
+
+Convert a "width x height" format string into an internal format specification.
+
+=cut
 
 sub stringToFormat($) {
 	my $sz = shift;
@@ -62,6 +141,12 @@ sub stringToFormat($) {
 	return $r;
 }
 
+=head2 setType (type_name)
+
+Set the encoding type from the given type name.
+
+=cut
+
 sub setType {
 	my $self = shift;
 	my $type = shift;
@@ -73,6 +158,12 @@ sub setType {
 	warn "Have type $t (".typeToString($t).")\n" if $DEBUG{ENC};
 	return;
 }
+
+=head2 new
+
+Construct a C<Barcode::DataMatrix::Engine> object.
+
+=cut
 
 sub new {
 	my $self = bless{},shift;
@@ -90,6 +181,12 @@ sub new {
 	return $self;
 }
 
+=head2 init
+
+Initialize some of the basic C<Barcode::DataMatrix::Engine> data.
+
+=cut
+
 sub init {
 	my $self = shift;
 	my %p = (
@@ -103,6 +200,13 @@ sub init {
 		$self->{$_} = $p{$_};
 	}
 }
+
+=head2 ProcessTilde
+
+Handle special or control characters, which are prefixed by a tilde C<~>
+when encoding.
+
+=cut
 
 sub ProcessTilde {
 	my $self = shift;
@@ -146,6 +250,12 @@ sub ProcessTilde {
 	}
 }
 
+=head2 CalcReed (ai, err)
+
+Return the message as a Reed-Solomon encoded array.
+
+=cut
+
 sub CalcReed { # (int ai[], int i, int j) : void
 	my ($ai,$err) = @_;
 	my $rv = Barcode::DataMatrix::Reed::encode($ai,$err);
@@ -178,11 +288,41 @@ sub CalcReed { # (int ai[], int i, int j) : void
 }
 
 sub A253($$) # C8 (int i, int j) : int 
+=head2 A253 (i, j)
+
+Return padding codewords via the 253-state algorithm.
+
+For more information see
+L<http://grandzebu.net/informatique/codbar-en/datamatrix.htm>.
+
+The relevant text for this algorithm is reproduced here.
+
+If the symbol is not full, pad C<CW>s are required. After the last data
+C<CW>, the 254 C<CW> indicates the end of the datas or the return to ASCII
+method. First padding C<CW> is 129 and next padding C<CW>s are computed with
+the 253-state algorithm.
+
+=head3 The 253-state algorithm
+
+Let C<P> be the number of data C<CW>s from the beginning of the data, C<R> a
+pseudo random number and C<CW> the required pad C<CW>.
+
+    R = ((149 * P) MOD 253) + 1
+    CW = (129 + R) MOD 254
+
+=cut
+
 {
 	my ($i,$j) = @_;
     my $l = $i + (149 * $j) % 253 + 1;
     return $l <= 254 ? $l : $l - 254;
 }
+
+=head2 CreateBitmap
+
+Generate and return the bitmap representing the message.
+
+=cut
 
 sub CreateBitmap() #CB (int ai[], String as[]) : int[][]
 {
@@ -261,6 +401,13 @@ sub CreateBitmap() #CB (int ai[], String as[]) : int[][]
     return $self->{bitmap} = $self->GenData($self->ecc($l,$ai1));
 }
 
+=head2 ecc (format, ai)
+
+Return the ECC200 (DataMatrix) array, formatted for the appropriate matrix
+size.
+
+=cut
+
 sub ecc {
 	my $self = shift;
 	my $format = shift;
@@ -301,21 +448,54 @@ sub ecc {
 	return \@rv;
 }
 
+=head2 isCDigit (character)
+
+Return true if the character is a digit.
+
+=cut
+
 sub isCDigit { # C1*
 	return shift =~ /^[0-9]$/ ? 1 : 0;
 }
+
+=head2 isIDigit (character_code)
+
+Return true if the character code represents a digit.
+
+=cut
+
 sub isIDigit { # C1
 	my $i = shift;
 	return ( $i >= 48 && $i <= 57 ) ? 1 : 0;
 }
+
+=head2 isILower (character_code)
+
+Return true if the character code represents a lower case letter.
+
+=cut
+
 sub isILower {
 	my $i = shift;
 	return ( $i >= ord('a') && $i <= ord('z') ) ? 1 : 0;
 }
+
+=head2 isIUpper (character_code)
+
+Return true if the character code represents an upper case letter.
+
+=cut
+
 sub isIUpper {
 	my $i = shift;
 	return ( $i >= ord('A') && $i <= ord('Z') ) ? 1 : 0;
 }
+
+=head2 DetectEncoding
+
+Detect the encoding type.
+
+=cut
 
 sub DetectEncoding() #C4 (int i, int ai[], int ai1[], String as[]) : int
 {
@@ -419,6 +599,11 @@ sub DetectEncoding() #C4 (int i, int ai[], int ai1[], String as[]) : int
     return $j1;
 }
 
+=head2 EncodeASCII (i, ai, ai1, as)
+
+Encode the message as ASCII.
+
+=cut
 
 sub EncodeASCII { #CE (int i; int ai[], int ai1[], String as[]) : int 
 	my $self = shift;
@@ -476,6 +661,12 @@ sub EncodeASCII { #CE (int i; int ai[], int ai1[], String as[]) : int
     warn "[CE] end $j ai1:{".join(" ",@$ai1)."};\n" if $DEBUG{ENC};
     return $j;
 }
+
+=head2 SelectEncoding (j, ai, i)
+
+Select a new encoding type for the message.
+
+=cut
 
 sub SelectEncoding #C3 (int ai[], int i, int j, String as[]) : int # DefineEncoding??
                    #iterator, ai, encoding
@@ -552,6 +743,12 @@ sub SelectEncoding #C3 (int ai[], int i, int j, String as[]) : int # DefineEncod
     return E_C40;
 }
 
+=head2 EncodeC40TEXT (i, ai, ai1, ai2, flag, flag1, flag2)
+
+Encode the message as C40/TEXT.
+
+=cut
+
 sub EncodeC40TEXT { # C6 #(int i, int ai[], int ai1[], int ai2[], boolean flag, boolean flag1, boolean flag2) : int
 	#warn "[C6] EncodeC40TEXT\n";
 	my $self = shift;
@@ -613,26 +810,53 @@ sub EncodeC40TEXT { # C6 #(int i, int ai[], int ai1[], int ai2[], boolean flag, 
     return $j;
 }
 
+=head2 state255 (V, P)
+
+The 255-state algorithm.  Used when encoding strings with the BASE256 type.
+
+This information originally from
+L<http://grandzebu.net/informatique/codbar-en/datamatrix.htm>.
+
+Let C<P> the number of data C<CW>s from the beginning of datas (C<CW> = code
+word).  Let C<R> be a pseudo random number, C<V> the base 256 C<CW> value
+and C<CW> the required C<CW>.
+
+    R = ((149 * P) MOD 255) + 1
+    CW = (V + R) MOD 256
+
+=cut
 
 sub state255($$) # (int V, int P) : int
 {
-	#The 255-state algorithm.
-	#Let P the number of data CWs from the beginning of datas,
-	#R a pseudo random number,
-	#V the base 256 CW value and CW the required CW.
-	#R = ((149 * P) MOD 255) + 1
-	#CW = (V + R) MOD 256
     my ($V,$P) = @_;
     return ( $V + (149 * $P) % 255 + 1 ) % 256;
 }
+
+=head2 hexary (src)
+
+Return a string representation of the input hexadecimal number.
+
+=cut
 
 sub hexary {
 	join(" ",map{ sprintf '%02x',$_} @{ shift() } )
 }
 
+=head2 decary (src)
+
+Return a string representation of the input decimal number.
+
+=cut
+
 sub decary {
 	join(" ",map{ sprintf '%3d',$_} @{ shift() } )
 }
+
+=head2 EncodeBASE256 (i, hint, src, stat, res, flag)
+
+Encode the message as BASE256.
+
+=cut
 
 sub EncodeBASE256 {
 	my $self = shift;
@@ -664,6 +888,12 @@ sub EncodeBASE256 {
     $stat->[0] = $l;
     return $l;
 }
+
+=head2 GenData (ai)
+
+Generate and return the data for the DataMatrix bitmap from the input array.
+
+=cut
 
 sub GenData { # CC (int ai[]) : int[][]
     my $self = shift;
@@ -722,6 +952,12 @@ sub GenData { # CC (int ai[]) : int[][]
     return $ai1;
 }
 
+=head2 FillBorder (ai, i, j, k, l)
+
+Fill the border of the ECC200 data matrix bitmap.
+
+=cut
+
 sub FillBorder { # CD (int ai[][], int i, int j, int k, int l) : void
 	my ($ai,$i,$j,$k,$l) = @_;
 	#warn "[CD] FillBorder([".join(",",@$ai)."],$i,$j,$k,$l)\n";
@@ -738,6 +974,12 @@ sub FillBorder { # CD (int ai[][], int i, int j, int k, int l) : void
         $ai->[$i + $k - 1][$j + $l1] = $j1;
     }
 }
+
+=head2 FillCharData (ncol, nrow, array)
+
+Fill the data matrix with the character data in the given message array.
+
+=cut
 
 sub FillCharData { # (int ncol; int nrow; int array;) : void
 	my ($ncol,$nrow,$array) = @_;
