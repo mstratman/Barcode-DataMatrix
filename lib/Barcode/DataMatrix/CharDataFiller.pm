@@ -50,7 +50,7 @@ sub corner1 {
     return;
 }
 
-sub corner2($) { #(int i)
+sub corner2 { #(int i)
 	my ($self,$i) = @_;
 	my ($ncol,$nrow) = @$self{qw( ncol nrow )};
     $self->module($nrow - 3, 0, $i, 1);
@@ -64,7 +64,7 @@ sub corner2($) { #(int i)
     return;
 }
 
-sub corner3($) { #(int i)
+sub corner3 { #(int i)
 	my ($self,$i) = @_;
 	my ($ncol,$nrow) = @$self{qw( ncol nrow )};
     $self->module($nrow - 3, 0, $i, 1);
@@ -78,7 +78,7 @@ sub corner3($) { #(int i)
     return;
 }
 
-sub corner4($) { #(int i)
+sub corner4 { #(int i)
 	my ($self,$i) = @_;
 	my ($ncol,$nrow) = @$self{qw( ncol nrow )};
     $self->module($nrow - 1, 0, $i, 1);
