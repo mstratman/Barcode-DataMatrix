@@ -103,11 +103,13 @@ L<http://www.idautomation.com/datamatrixfaq.html>
 
 =cut
 
-=head1 AUTHOR
+=head1 AUTHORS
 
 Mons Anderson C<< <inthrax@gmail.com> >> (GD::Barcode::DataMatrix at L<http://code.google.com/p/perl-ex/>, from which this distribution originates)
 
 Mark A. Stratman, C<< <stratman@gmail.com> >>
+
+Paul Cochrane, L<https://github.com/paultcochrane>
 
 =head1 SOURCE REPOSITORY
 
@@ -127,7 +129,7 @@ L<http://github.com/mstratman/Barcode-DataMatrix>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 the AUTHORs listed above.
+Copyright 2015 the AUTHORs listed above.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

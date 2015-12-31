@@ -50,6 +50,8 @@ Detailed documentation about this distribution can be found in
 
  - Mark A. Stratman, <stratman@gmail.com>
 
+ - Paul Cochrane, https://github.com/paultcochrane
+
 ## License and Copyright
 
 Copyright 2015 the Authors listed above.
