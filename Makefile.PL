@@ -6,7 +6,10 @@ author   q{Mark A. Stratman <stratman@gmail.com>};
 license  'perl';
 perl_version '5.006';
 
-requires 'Any::Moose' => '0.15';
+requires 'Moo'             => '0';
+requires 'Type::Tiny'      => '0';
+requires 'Types::Standard' => '0';
+requires 'Type::Utils'     => '0';
 
 tests 't/*.t';
 author_tests 'xt';
