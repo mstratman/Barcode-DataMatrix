@@ -1,7 +1,18 @@
 package Barcode::DataMatrix::Reed;
-# This is just a renamed version of Algorithm::DataMatrix::Reed
-# by Mons Anderson
-# from http://code.google.com/p/perl-ex/
+
+=head1 Barcode::DataMatrix::Reed
+
+This is just a renamed version of Algorithm::DataMatrix::Reed
+by Mons Anderson
+from http://code.google.com/p/perl-ex/
+
+For a rough explanation of the structure of this code, see
+L<https://en.wikiversity.org/wiki/Reed%E2%80%93Solomon_codes_for_coders#Reed.E2.80.93Solomon_codes>.
+Note that the link is not the basis of the implementation (this is unknown),
+however it helps explain how Reed-Solomon encoding is implemented and hence
+how the code below works.
+
+=cut
 
 use strict;
 use warnings;
@@ -9,13 +20,32 @@ use Carp;
 
 our (@GFI,@GFL,%POLY,$DEBUG);
 our $N = 255;
-sub DEBUG () { 0 }
+
+=head2 DEBUG
+
+Control whether or not debugging output is printed.
+
+=cut
+
+sub DEBUG { 0 }
+
+=head2 mult (x, y)
+
+Multiply two Galois field element values and return the result.
+
+=cut
 
 sub mult {
     my ($x, $y) = @_;
 	return 0 unless $x * $y;
 	return $GFI[($GFL[$x] + $GFL[$y]) % $N];
 }
+
+=head2 encode (ai, j)
+
+Encode the message array and return it.
+
+=cut
 
 sub encode {
 	my ($ai,$j) = @_;
@@ -37,6 +67,12 @@ sub encode {
 	warn "CalcReed: result [@$ai]\n" if DEBUG;
 	return $ai;
 }
+
+=head2 decode
+
+Decode the message array.  Currently not implemented.
+
+=cut
 
 sub decode {
 	croak "not implemented";
