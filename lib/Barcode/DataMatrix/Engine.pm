@@ -270,7 +270,7 @@ sub CalcReed { # (int ai[], int i, int j) : void
 #		return $GFI[$k];
 #	}
 #	sub short($) { $_[0] & 0xFF; }
-#		
+#
 #	my ($ai,$j) = @_;
 #	my $i = @$ai;
 #	warn "CalcReed(ai {".join(" ",grep{+defined}@$ai)."},$i,$j)\n" if $DEBUG{CALC};
@@ -311,7 +311,7 @@ pseudo random number and C<CW> the required pad C<CW>.
 
 =cut
 
-sub A253 # C8 (int i, int j) : int 
+sub A253 # C8 (int i, int j) : int
 {
 	my ($i,$j) = @_;
     my $l = $i + (149 * $j) % 253 + 1;
@@ -371,17 +371,17 @@ sub CreateBitmap #CB (int ai[], String as[]) : int[][]
     return if $k == 30;
     my $l = $k;
 	@$self{qw(
-		rows      
-		cols      
-		datarows  
-		datacols  
-		regions   
-		maprows   
-		mapcols   
-		totaldata 
-		totalerr  
-		reeddata  
-		reederr   
+		rows
+		cols
+		datarows
+		datacols
+		regions
+		maprows
+		mapcols
+		totaldata
+		totalerr
+		reeddata
+		reederr
 		reedblocks
 	)} = @{$FORMATS[$l]}[0..11];
 	DEBUG and print "Format: $self->{rows}x$self->{cols}; Data: $self->{totaldata}; i=$i; blocks = $self->{reedblocks}\n";
@@ -429,7 +429,7 @@ sub ecc {
 			#warn "144 fix: decrease block $_ to size 155 from @{[ 0+@{$blocks[$_]} ]}";
         	$#{$blocks[$_]} -= 1;
         }
-		
+
 		CalcReed($blocks[$_], $err);
 	}
     warn "Calc reed=\n".
@@ -522,7 +522,7 @@ sub DetectEncoding() #C4 (int i, int ai[], int ai1[], String as[]) : int
 			warn("DetectENC: while at $iterator ce=$encName[$self->{currentEncoding}] k1=$encName[$k1] l2=$encName[$l2]\n") if $DEBUG{EAUTO};
             my $flag1 = 0;
             if(
-            	$iterator + 1 < $i 
+            	$iterator + 1 < $i
             	and isIDigit($ai->[$iterator])
             	and isIDigit($ai->[$iterator + 1])
             ){
@@ -605,7 +605,7 @@ Encode the message as ASCII.
 
 =cut
 
-sub EncodeASCII { #CE (int i; int ai[], int ai1[], String as[]) : int 
+sub EncodeASCII { #CE (int i; int ai[], int ai1[], String as[]) : int
 	my $self = shift;
 	warn "[CE] EncodeASCII(@_)\n" if $DEBUG{TRACE};
 	my ($i,$ai,$ai1,$as) = @_;
@@ -614,8 +614,8 @@ sub EncodeASCII { #CE (int i; int ai[], int ai1[], String as[]) : int
     my $flag = 0;
     for(my $k = 0; $k < $i; $k++) {
         my $flag1 = 0;
-        if(	
-        	$k < $i - 1 
+        if(
+        	$k < $i - 1
         	and isIDigit($ai->[$k])
         	and isIDigit($ai->[$k+1])
         ) {
@@ -675,15 +675,15 @@ sub SelectEncoding #C3 (int ai[], int i, int j, String as[]) : int # DefineEncod
 	#(ai,i: encoding,j: iterator,as)
 	my $self = shift;
 	warn "[C3] SelectEncoding(@_)\n" if $DEBUG{TRACE};
-	
+
 	my $j = shift;
-	
+
 	my $ai = shift;
 	$ai = $self->{ai} unless defined $ai;
 
 	my $i = shift || $self->{currentEncoding};
 	$i = $self->{currentEncoding} unless defined $i;
-	
+
 	my $as = $self->{as};
     my $d  = 0.0;
     my $d2 = 1.0;
@@ -705,24 +705,24 @@ sub SelectEncoding #C3 (int ai[], int i, int j, String as[]) : int # DefineEncod
     	warn "SelectEncoding: have as[$j]: $as->[$j]\n" if defined $as->[$j] and $DEBUG{EAUTO};
         my $c = $ai->[$j];
         return E_ASCII if defined $as->[$j];
-        
+
         if    ( isIDigit($c) )        { $d += 0.5 }
         elsif ( $c > 127 )            { $d = int( $d + 0.5 ) + 2; }
         else                          { $d = int( $d + 0.5 ) + 1; }
-        
+
         if    ( @{ $C1[$c] } == 1 )   { $d2 += 0.66000000000000003; }
         elsif ( $c > 127 )            { $d2 += 2.6600000000000001;  }
         else                          { $d2 += 1.3300000000000001;  }
         my $c1 = $c;
         if( isIUpper($c) )            { $c1 = ord lc chr $c; }
         if( isILower($c) )            { $c1 = ord uc chr $c; }
-        
+
         if    ( @{ $C1[$c1] } == 1)   { $d3 += 0.66000000000000003; }
         elsif ( $c1 > 127 )           { $d3 += 2.6600000000000001;  }
         else                          { $d3 += 1.3300000000000001;  }
 
         $d4++;
-        
+
         if($j - $k >= 4) {
         	#warn "$j-$k >= 4: $d $d2 $d3 $d4\n";
             return E_ASCII   if $d  + 1.0 <= $d2 and $d + 1.0 <= $d3 and $d + 1.0 <= $d4;
@@ -863,7 +863,7 @@ sub EncodeBASE256 {
 	my ($i,$hint,$src,$stat,$res,$flag) = @_;
     my $j = 0;
     my $xv = [];
-    my $k = 
+    my $k =
     my $l = $stat->[0];
     my $flag1 = 0;
     my $j1 = 0;
@@ -900,7 +900,7 @@ sub GenData { # CC (int ai[]) : int[][]
     my ($ai) = @_;
     warn "[CC] GenData: ".join(",",@$ai)." [$self->{rows} x $self->{cols} : $self->{regions} : $self->{datacols}x$self->{datarows}]\n" if $DEBUG{TRACE};
 	my $ai1 = [ map { [ (undef) x $self->{rows} ] } 1..$self->{cols} ]; # reverse cols/rows here, for correct access ->[][]
-	
+
     my $i = my $j = 0;
     # Draw border
     if($self->{regions} == 2) {
