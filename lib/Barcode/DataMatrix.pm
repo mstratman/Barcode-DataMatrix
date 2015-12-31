@@ -5,7 +5,6 @@ use Types::Standard qw(:all);
 use Type::Utils qw(enum);
 use Barcode::DataMatrix::Engine ();
 
-## no critic (RequireUseWarnings, RequireUseStrict)
 our $VERSION = '0.06';
 
 has 'encoding_mode' => (
