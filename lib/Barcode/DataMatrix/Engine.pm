@@ -152,7 +152,6 @@ sub setType {
 	my $type = shift;
 	my $t = stringToType($type);
 	warn "setType $type => $t\n" if $DEBUG{ENC};
-	#$t = E_AUTO unless defined $t;
 	$t = E_ASCII unless defined $t;
 	$self->{encoding} = $self->{currentEncoding} = $t;
 	warn "Have type $t (".typeToString($t).")\n" if $DEBUG{ENC};
@@ -261,30 +260,6 @@ sub CalcReed { # (int ai[], int i, int j) : void
 	my $rv = Barcode::DataMatrix::Reed::encode($ai,$err);
 	@$ai = @$rv;
 	return $ai;
-	#sub mult($$) { # (int i, int j) : int
-#		my ($i,$j) = @_;
-#		my $k = 0;
-#		return 0 unless 1 * $i * $j;
-#		$k = $GFL[$i] + $GFL[$j];
-#		$k -= $N if $k >= $N;
-#		return $GFI[$k];
-#	}
-#	sub short($) { $_[0] & 0xFF; }
-#
-#	my ($ai,$j) = @_;
-#	my $i = @$ai;
-#	warn "CalcReed(ai {".join(" ",grep{+defined}@$ai)."},$i,$j)\n" if $DEBUG{CALC};
-#	my $p = exists $POLY{$j} ? $POLY{$j} : $POLY{68};
-#	warn "CalcReed: poly {".join(" ",@$p)."}\n" if $DEBUG{CALC};
-#    @$ai[ $i .. $i + $j - 1 ] = (0) x $j;
-#    for my $l(0 .. $i - 1) {
-#        my $word0 = short($ai->[$i] ^ $ai->[$l]);
-#        for my $i1 (0 .. $j - 1) {
-#            $ai->[$i + $i1] = short( $ai->[$i + $i1 + 1] ^ mult($word0, $p->[$i1]) );
-#        }
-#        $ai->[$i+$j-1] = mult($word0, $p->[$j - 1]);
-#    }
-#    return $ai;
 }
 
 =head2 A253 (i, j)
@@ -332,7 +307,6 @@ sub CreateBitmap #CB (int ai[], String as[]) : int[][]
     my $ai1 = [];
     my $i = 0;
 	$self->{currentEncoding} = $self->{encoding} if $self->{encoding} != E_AUTO;
-	#warn "AI Before enc: ".join(" ",@$ai)."\n";
 	for ($self->{encoding}){
 		warn "[CB] Select method for $self->{encoding}, ".typeToString($self->{encoding})."\n" if $DEBUG{ENC};
 		$_ == E_AUTO    && do { $i = $self->DetectEncoding($ai1); last;};
@@ -344,18 +318,15 @@ sub CreateBitmap #CB (int ai[], String as[]) : int[][]
 	}
 	warn "[CB] selected (ai1[" .join(',',@$ai1).'], as[' . scalar(@$as) .  "])\n" if $DEBUG{TRACE};
 	DEBUG and print "Use Encoding: " .typeToString($self->{currentEncoding}). "(".typeToString($self->{encoding}).")\n";
-	#warn "AI1 After enc: ".join(" ",@$ai1)."\n";
 	warn "[CB]: enc res: ".typeToString($self->{encoding}).", " .typeToString($self->{currentEncoding}). "\n" if $DEBUG{ENC};
     my $k = 0;
 	if($self->{preferredFormat} != -1) {
     	$k = $self->{preferredFormat};
         $k = 0 if $i > $FORMATS[$k][7];
     }
-	#warn "[CB]: format: $k\n";
     for(; $i > $FORMATS[$k][7] && $k < 30; $k++)
     {
     	next if $self->{currentEncoding} != E_C40 && $self->{currentEncoding} != E_TEXT;
-    	#warn "[CB]: enc: E_C40/E_TEXT\n";
         if($self->{C49rest} == 1 && $ai1->[$i - 2] == 254 && $FORMATS[$k][7] == $i - 1) {
             $ai1->[$i - 2] = $ai1->[$i - 1];
             $ai1->[$i - 1] = 0;
@@ -385,7 +356,6 @@ sub CreateBitmap #CB (int ai[], String as[]) : int[][]
 		reedblocks
 	)} = @{$FORMATS[$l]}[0..11];
 	DEBUG and print "Format: $self->{rows}x$self->{cols}; Data: $self->{totaldata}; i=$i; blocks = $self->{reedblocks}\n";
-	#warn "[CB]: Selected $self->{rows}x$self->{cols} [$self->{totaldata}]; $i\n";
 	$ai1->[$i - 1] = 129 if (
 		($self->{currentEncoding} == E_C40 || $self->{currentEncoding} == E_TEXT )
 		and
@@ -394,7 +364,6 @@ sub CreateBitmap #CB (int ai[], String as[]) : int[][]
     my $flag = 1;
     warn "Calc begin from $i..$self->{totaldata} ai1=[@{$ai1}]\n" if $DEBUG{CALC};
 	for(my $i1 = $i; $i1 < $self->{totaldata}; $i1++) {
-		#warn "   CB: $i <= $i1 < $self->{totaldata}\n";
         $ai1->[$i1] = $flag ? 129 : A253(129, $i1 + 1);
         $flag = 0;
     }
@@ -421,12 +390,10 @@ sub ecc {
     	push @{$blocks[$block++]}, $_;
     	$block = 0 if $block > $blocks;
     }
-    #$#{ $blocks[-1] } = $#{ $blocks[0] };
     warn "Calc blocks=".Dumper \@blocks if $DEBUG{CALC};
 	for (0..$#blocks) {
         $#{ $blocks[$_] } = $data; # correct padding
         if($self->{rows} == 144 and $_ > 7) {
-			#warn "144 fix: decrease block $_ to size 155 from @{[ 0+@{$blocks[$_]} ]}";
         	$#{$blocks[$_]} -= 1;
         }
 
@@ -437,11 +404,8 @@ sub ecc {
     my @rv;
 	for my $n (0..$data+$err) {
 		for my $b (0..$#blocks) {
-			#warn "Calc $n, block $b";
 			if ( $n < @{$blocks[$b]} ) { # 144 fix
 				push @rv, $blocks[$b][$n];
-			} else {
-				#warn "skip $n from $b: 144 fix";
 			}
 		}
 	}
@@ -540,7 +504,6 @@ sub DetectEncoding() #C4 (int i, int ai[], int ai1[], String as[]) : int
             }
             if(!$flag1) {
 				warn("DetectENC: !dig !flag1 at $iterator ce=$encName[$self->{currentEncoding}] k1=$encName[$k1] l2=$encName[$l2]\n") if $DEBUG{EAUTO};
-            	#my $l1 = C3(@$ai, $self->{currentEncoding}, $iterator, @$as);
             	my $l1 = $self->SelectEncoding( $iterator );
                 if( $l1 != E_ASCII) {
 					warn("DetectENC: $encName[$self->{currentEncoding}] => $encName[$l1]\n") if $DEBUG{EAUTO};
@@ -562,7 +525,6 @@ sub DetectEncoding() #C4 (int i, int ai[], int ai1[], String as[]) : int
         }
 		warn("DetectENC: after while at $iterator ce=$encName[$self->{currentEncoding}] k1=$encName[$k1] l2=$encName[$l2]\n") if $DEBUG{EAUTO};
         my $i2;
-        #warn "DetectEncoding < $iterator < $i > : i2: [$i2] ".typeToString($i2)."\n";
     	for(; $self->{currentEncoding} == E_C40 and $iterator < $i; $self->{currentEncoding} = $i2) {
             $ai4->[0] = $iterator;
             my $l = $self->EncodeC40TEXT($i, $ai4, $ai, $ai3, 0, $l2 != E_C40, 1);
@@ -619,27 +581,23 @@ sub EncodeASCII { #CE (int i; int ai[], int ai1[], String as[]) : int
         	and isIDigit($ai->[$k])
         	and isIDigit($ai->[$k+1])
         ) {
-        	#warn "[CE] $flag $flag1 $k $ai->[$k] is type 1";
             my $l = ($ai->[$k] - 48) * 10 + ($ai->[$k + 1] - 48);
             $ai1->[$j++] = 130 + $l;
             $k++;
             $flag1 = 1;
         }
         if(!$flag1 and defined $as->[$k]) {
-        	#warn "[CE] $flag $flag1 $k $ai->[$k] is subtype !flag";
             if(
             	   $ai->[$k] == 234
             	or $ai->[$k] == 237
             	or $ai->[$k] == 236
             	or $ai->[$k] == 232
             ) {
-	        	#warn "[CE] $flag $flag1 $k $ai->[$k] is type 2";
                 $ai1->[$j++] = $ai->[$k];
                 $flag1 = 1;
             }
             if($ai->[$k] == 233 || $ai->[$k] == 241) {
                 $ai1->[$j++] = $ai->[$k];
-                #warn("Additional data by 233/241 for $k: $as->[$k]");
                 for(my $i1 = 0; $i1 < length $as->[$k]; $i1++){
                     $ai1->[$j++] = ord substr($as->[$k],$i1,1);
                 }
@@ -648,16 +606,13 @@ sub EncodeASCII { #CE (int i; int ai[], int ai1[], String as[]) : int
         }
         if(!$flag1){
             if($ai->[$k] < 128) {
-	        	#warn "[CE] $flag $flag1 $k $ai->[$k] is type 3";
                 $ai1->[$j++] = $ai->[$k] + 1;
             } else {
-	        	#warn "[CE] $flag $flag1 $k $ai->[$k] is type 4";
                 $ai1->[$j++] = 235;
                 $ai1->[$j++] = ($ai->[$k] - 128) + 1;
             }
         }
     }
-    #warn Dumper( \@_ );
     warn "[CE] end $j ai1:{".join(" ",@$ai1)."};\n" if $DEBUG{ENC};
     return $j;
 }
@@ -724,7 +679,6 @@ sub SelectEncoding #C3 (int ai[], int i, int j, String as[]) : int # DefineEncod
         $d4++;
 
         if($j - $k >= 4) {
-        	#warn "$j-$k >= 4: $d $d2 $d3 $d4\n";
             return E_ASCII   if $d  + 1.0 <= $d2 and $d + 1.0 <= $d3 and $d + 1.0 <= $d4;
             return E_BASE256 if $d4 + 1.0 <= $d;
             return E_BASE256 if $d4 + 1.0 < $d3 and $d4 + 1.0 < $d2;
@@ -750,7 +704,6 @@ Encode the message as C40/TEXT.
 =cut
 
 sub EncodeC40TEXT { # C6 #(int i, int ai[], int ai1[], int ai2[], boolean flag, boolean flag1, boolean flag2) : int
-	#warn "[C6] EncodeC40TEXT\n";
 	my $self = shift;
 	my ($i,$ai,$ai1,$ai2,$flag,$flag1,$flag2) = @_;
     my $j = my $k = 0;
@@ -875,7 +828,6 @@ sub EncodeBASE256 {
     }
     warn "AI1{".hexary($src)."}\n" if $DEBUG{B256};
     warn "AI4{".hexary($xv)."}\n" if $DEBUG{B256};
-	#warn "$j1 : $l\n";
     $hint->[0] = $j1;
     $res->[$l++] = 231;
     if($j < 250) {
@@ -960,7 +912,6 @@ Fill the border of the ECC200 data matrix bitmap.
 
 sub FillBorder { # CD (int ai[][], int i, int j, int k, int l) : void
 	my ($ai,$i,$j,$k,$l) = @_;
-	#warn "[CD] FillBorder([".join(",",@$ai)."],$i,$j,$k,$l)\n";
     my $i1 = 0;
     for(my $k1 = 0; $k1 < $k; $k1++) {
         $i1 = ($k1 % 2 == 0) ? 1 : 0;
