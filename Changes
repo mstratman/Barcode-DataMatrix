@@ -1,4 +1,9 @@
 Revision history for Barcode-DataMatrix
+0.06    Wed Dec 30 19:00:10 CST 2015
+        - Switched from Any::Moose to Moo
+        - Documentation added to the engine
+        - Many things cleaned up (see git history)
+
 0.05    Thu Apr 16 09:56:07 CDT 2015
         - Updated the various enums to use an array reference rather
           than an array to avoid deprecation warnings when using Moose 2.1200
