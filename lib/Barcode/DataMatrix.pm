@@ -55,7 +55,7 @@ can take any of the other L<attributes|/ATTRIBUTES> listed below.
 =head2 barcode ($text)
 
 Generate barcode data representing the C<$text> string.  This returns
-an array ref of rows in the data matrix, each containing array refs of 
+an array ref of rows in the data matrix, each containing array refs of
 cells within that row. The cells are true and false values
 that represent filled or empty squares.
 
