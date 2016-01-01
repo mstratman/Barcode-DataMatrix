@@ -29,11 +29,8 @@ our %DEBUG = (
 	TRACE  => 0,
 	B256   => 0
 );
-our (@GFI,@GFL,%POLY,@FORMATS,@C1);
+our (@FORMATS,@C1);
 
-*GFI     = \@Barcode::DataMatrix::Constants::GFI;
-*GFL     = \@Barcode::DataMatrix::Constants::GFL;
-*POLY    = \%Barcode::DataMatrix::Constants::POLY;
 *FORMATS = \@Barcode::DataMatrix::Constants::FORMATS;
 *C1      = \@Barcode::DataMatrix::Constants::C1;
 
