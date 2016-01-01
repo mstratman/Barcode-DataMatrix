@@ -448,16 +448,6 @@ sub ecc {
 	return \@rv;
 }
 
-=head2 isCDigit (character)
-
-Return true if the character is a digit.
-
-=cut
-
-sub isCDigit { # C1*
-	return shift =~ /^[0-9]$/ ? 1 : 0;
-}
-
 =head2 isIDigit (character_code)
 
 Return true if the character code represents a digit.
@@ -840,16 +830,6 @@ Return a string representation of the input hexadecimal number.
 
 sub hexary {
 	join(" ",map{ sprintf '%02x',$_} @{ shift() } )
-}
-
-=head2 decary (src)
-
-Return a string representation of the input decimal number.
-
-=cut
-
-sub decary {
-	join(" ",map{ sprintf '%3d',$_} @{ shift() } )
 }
 
 =head2 EncodeBASE256 (i, hint, src, stat, res, flag)
