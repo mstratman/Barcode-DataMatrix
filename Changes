@@ -1,4 +1,12 @@
 Revision history for Barcode-DataMatrix
+0.07    Fri Jan  1 13:20:21 CST 2016
+        - Added missing 'use warnings' pragmas
+        - Removed commented-out code
+        - Removed now unnecessary "no critic" statement
+        - Removed unused constants and duplication
+        - Ignore Devel::Cover's cover_db dir
+        - Update outdated URLs to new locations
+
 0.06    Wed Dec 30 19:00:10 CST 2015
         - Switched from Any::Moose to Moo
         - Documentation added to the engine
