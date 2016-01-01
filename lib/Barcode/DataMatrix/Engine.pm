@@ -7,6 +7,7 @@ The engine which generates the data matrix bitmap.
 =cut
 
 use strict;
+use warnings;
 no warnings qw(uninitialized);
 use Barcode::DataMatrix::Reed;
 use Barcode::DataMatrix::Constants ();

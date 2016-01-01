@@ -1,5 +1,8 @@
 package Barcode::DataMatrix::CharDataFiller;
 
+use strict;
+use warnings;
+
 =head1 Barcode::DataMatrix::CharDataFiller
 
 Handle filling character data within the data matrix array.
@@ -7,10 +10,6 @@ Handle filling character data within the data matrix array.
 The documentation for the methods in this class has been adapted from the
 comments in
 L<https://github.com/itext/itextpdf/blob/master/itext/src/main/java/com/itextpdf/text/pdf/BarcodeDatamatrix.java>.
-
-=cut
-
-use strict;
 
 =head2 new
 
