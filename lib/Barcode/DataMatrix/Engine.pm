@@ -794,7 +794,6 @@ sub EncodeBASE256 {
 	my ($i,$hint,$src,$stat,$res,$flag) = @_;
     my $j = 0;
     my $xv = [];
-    my $k =
     my $l = $stat->[0];
     my $flag1 = 0;
     my $j1 = 0;
