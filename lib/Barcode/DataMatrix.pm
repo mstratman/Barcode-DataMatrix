@@ -1,26 +1,19 @@
 package Barcode::DataMatrix;
 use Moo;
-use Type::Tiny;
-use Types::Standard qw(:all);
-use Type::Utils qw(enum);
 use Barcode::DataMatrix::Engine ();
 
 our $VERSION = '0.07';
 
 has 'encoding_mode' => (
     is       => 'ro',
-    isa      => enum([qw[ ASCII C40 TEXT BASE256 NONE AUTO ]]),
-    isa      => enum(BCDM_EncodingMode => [qw[ ASCII C40 TEXT BASE256 NONE AUTO ]]),
-    required => 1,
+    isa      => sub { my $type = shift; for (qw(ASCII C40 TEXT BASE256 NONE AUTO)) { return 1 if $type eq $_ } return 0; },
     default  => 'AUTO',
     documentation => 'The encoding mode for the data matrix. Can be one of: ASCII C40 TEXT BASE256 NONE AUTO',
 );
 has 'process_tilde' => (
     is       => 'ro',
-    isa      => Bool,
-    required => 0,
     default  => 0,
-    documentation => 'Set to true to indicate the tilde character "~" is being used to recognize special characters.',
+    documentation => 'Boolean. Set to true to indicate the tilde character "~" is being used to recognize special characters.',
 );
 
 =head1 NAME
@@ -99,7 +92,7 @@ C<AUTO> (default), C<ASCII>, C<C40>, C<TEXT>, C<BASE256>, or C<NONE>.
 
 =head2 process_tilde
 
-Set to true to indicate the tilde character "~" is being used to recognize
+Boolean. Set to true to indicate the tilde character "~" is being used to recognize
 special characters. See this page for more information:
 L<http://www.idautomation.com/datamatrixfaq.html>
 
