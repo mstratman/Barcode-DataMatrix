@@ -130,6 +130,7 @@ Convert a "width x height" format string into an internal format specification.
 sub stringToFormat {
 	my $sz = shift;
 	return unless $sz;
+	return if $sz eq 'AUTO';
 	my ($w,$h) = map { +int } split /\s*x\s*/,$sz,2;
 	my $r;
 	for my $i (0..$#FORMATS) {
