@@ -777,7 +777,7 @@ sub state255 # (int V, int P) : int
 
 =head2 hexary (src)
 
-Return a string representation of the input hexadecimal number.
+Return a string representation of the input array of numbers.
 
 =cut
 
